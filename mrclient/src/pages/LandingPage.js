@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Layout() {
   const classes = useStyles();
+
   return (
     <Grid container className={classes.root} justify="center" alignItems="center">
       <TrackListing />

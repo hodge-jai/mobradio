@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Grid, Paper, Button, Divider, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -26,6 +26,14 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Layout() {
   const classes = useStyles();
+  const [playlist, setPlaylist] = useState();
+  useEffect(() => {
+    fetch("/playlist/")
+      .then((res) => res.json())
+      .then((data) => setPlaylist(data));
+
+    console.log(playlist)
+  }, []);
   return (
     <Paper className={classes.root} elevation={10} square>
       <Grid
@@ -41,6 +49,7 @@ export default function Layout() {
           variant="middle"
           flexItem
         />
+        <Grid className={classes.voteBox}></Grid>
       </Grid>
     </Paper>
   );
