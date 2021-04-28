@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Paper, Button, Divider, Typography } from "@material-ui/core";
+import { Grid, Paper, Button, Divider, Typography, List, ListItem } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -26,13 +26,15 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Layout() {
   const classes = useStyles();
-  const [playlist, setPlaylist] = useState();
+  const [playlist, setPlaylist] = useState([]);
   useEffect(() => {
     fetch("/playlist/")
       .then((res) => res.json())
       .then((data) => setPlaylist(data));
 
-    console.log(playlist)
+    return function cleanup() {
+      console.log(playlist);
+    };
   }, []);
   return (
     <Paper className={classes.root} elevation={10} square>
@@ -42,7 +44,15 @@ export default function Layout() {
         justify="flex-start"
         alignItems="center"
       >
-        <Grid className={classes.trackList}></Grid>
+        <Grid className={classes.trackList}>
+          <List>
+            {playlist.map((item) => (
+              <ListItem key={`item-${item.track.name}`}>
+                <Typography>{item.track.name}</Typography>
+              </ListItem>
+            ))}
+          </List>
+        </Grid>
         <Divider
           className={classes.divider}
           orientation="vertical"

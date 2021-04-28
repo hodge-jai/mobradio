@@ -3,7 +3,7 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-var request = require("request");
+const mongoose = require("mongoose");
 
 var playlistRouter = require("./routes/playlist");
 
@@ -18,7 +18,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/playlist", playlistRouter);
-
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
@@ -36,49 +35,12 @@ app.use(function (err, req, res, next) {
 });
 
 
-// var refresh_token = process.env.REFRESH_TOKEN;
-// var authOptions = {
-//   url: "https://accounts.spotify.com/api/token",
-//   headers: {
-//     Authorization:
-//       "Basic " +
-//       new Buffer(
-//         process.env.CLIENT_ID + ":" + process.env.CLIENT_SECRET
-//       ).toString("base64"),
-//   },
-//   form: {
-//     grant_type: "refresh_token",
-//     refresh_token: refresh_token,
-//   },
-//   json: true,
-// };
-// request.post(authOptions, function (error, response, body) {
-//   if (!error && response.statusCode === 200) {
-//     getPlaylist(body.access_token);
-//   }
-// });
-//
-// function getPlaylist(accessToken) {
-//   var authOptions_two = {
-//     url:
-//       "https://api.spotify.com/v1/playlists/3C0lhwNINsyN2Ufw2ILbm7/tracks?market=from_token",
-//     headers: {
-//       'Authorization': "Bearer " + accessToken,
-//       'Content-Type': 'application/json',
-//       'Accept': 'application/json'
-//     },
-//     json: true,
-//
-//   };
-//   request.get(authOptions_two, function (error, response, body) {
-//     if (!error && response.statusCode === 200) {
-//       console.log(body.items[0].track.album);
-//     }
-//     else{
-//       console.log(error);
-//       console.log(response);
-//     }
-//   });
-// }
+const uri = process.env.ATLAS_URI;
+mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true });
+
+const connection = mongoose.connection;
+connection.once("open", () => {
+  console.log("MongoDB database connection established successfully");
+});
 
 module.exports = app;
