@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var got = require("got");
+var querystring = require("querystring");
 
 class SpotifyApi {
   constructor() {
@@ -30,6 +31,7 @@ class SpotifyApi {
       );
       this.accessToken = body.access_token;
       this.lastRefresh = Date.now();
+      console.log(this.accessToken);
     } catch (err) {
       console.log(err);
     }
@@ -57,7 +59,28 @@ class SpotifyApi {
       );
       return JSON.stringify(body.items);
     } catch (err) {
-      return err
+      return err;
+    }
+  }
+  async trackSearch(search) {
+    var query =
+      "https://api.spotify.com/v1/search?q=" +
+      querystring.escape(search) +
+      "&type=track";
+    var authOptions = {
+      headers: {
+        Authorization: "Bearer " + this.accessToken,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      responseType: "json",
+    };
+    try {
+      const { body } = await got(query, authOptions);
+      console.log(body.tracks.items[0].name)
+      return JSON.stringify(body.tracks.items);
+    } catch (err) {
+      return err;
     }
   }
 }
