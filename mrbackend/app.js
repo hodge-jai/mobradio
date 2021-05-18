@@ -36,7 +36,9 @@ app.use(function (err, req, res, next) {
 
 
 const uri = process.env.ATLAS_URI;
-mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true });
+mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true }, function(err){
+  if (err) console.log(err);
+});
 
 const connection = mongoose.connection;
 connection.once("open", () => {

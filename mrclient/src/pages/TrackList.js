@@ -29,8 +29,8 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
   },
   trackItem: {
-    paddingBottom: 0
-  }
+    paddingBottom: 0,
+  },
 }));
 
 export default function Layout() {
@@ -51,8 +51,15 @@ export default function Layout() {
       <Paper className={classes.paper} square>
         <List>
           {playlist.map((item) => (
-            <ListItem key={`item-${item.track.id}`} className={classes.trackItem}>
-              <TrackCard name={item.track.name} artists={item.track.artists[0].name} image={item.track.album.images[0]} />
+            <ListItem
+              key={`item-${item.track.id}`}
+              className={classes.trackItem}
+            >
+              <TrackCard
+                name={item.track.name}
+                artists={item.track.artists[0].name}
+                image={item.track.album.images[0]}
+              />
             </ListItem>
           ))}
         </List>
