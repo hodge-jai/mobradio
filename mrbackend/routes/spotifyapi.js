@@ -37,6 +37,31 @@ class SpotifyApi {
     }
   }
 
+  async addToPlaylist(trackID) {
+    var authOptions = {
+      headers: {
+        Authorization: "Bearer " + this.accessToken,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      responseType: "json",
+    };
+
+    const query =
+      "https://api.spotify.com/v1/playlists/3C0lhwNINsyN2Ufw2ILbm7/tracks?uris=" +
+      querystring.escape("spotify:track:" + trackID);
+    console.log(query)
+    try {
+      const { body } = await got.post(
+        query,
+        authOptions
+      );
+      console.log(body);
+    } catch (err) {
+      return err;
+    }
+  }
+
   tokenExpired() {
     let milliseconds = Math.abs(Date.now() - this.lastRefresh);
     let hours = milliseconds / 36e5;
@@ -77,7 +102,6 @@ class SpotifyApi {
     };
     try {
       const { body } = await got(query, authOptions);
-      console.log(body.tracks.items[0].name)
       return JSON.stringify(body.tracks.items);
     } catch (err) {
       return err;

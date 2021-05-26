@@ -13,7 +13,13 @@ import {
   CardMedia,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { ArrowUpward, ArrowDownward } from "@material-ui/icons";
+import {
+  ArrowUpward,
+  ArrowDownward,
+  PlayCircleOutlineRounded,
+  PauseCircleOutlineRounded,
+  LinkRounded,
+} from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   trackCard: {
@@ -35,20 +41,50 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: "64px",
     overflow: "auto",
     flexWrap: "no-wrap",
-
   },
 }));
 
+const useAudio = (url) => {
+  const [audio] = useState(new Audio(url));
+  const [playing, setPlaying] = useState(false);
+
+  const toggle = () => setPlaying(!playing);
+
+  useEffect(() => {
+    playing ? audio.play() : audio.pause();
+  }, [playing]);
+
+  useEffect(() => {
+    audio.addEventListener("ended", () => setPlaying(false));
+    return () => {
+      audio.removeEventListener("ended", () => setPlaying(false));
+    };
+  }, []);
+
+  return [playing, toggle];
+};
+
 export default function Layout(props) {
   const classes = useStyles();
-  const [playlist, setPlaylist] = useState([]);
+  const [playing, toggle] = useAudio(props.previewUrl);
+  const openInNewTab = (url) => {
+    const newWindow = window.open(url, "_blank", "noopener,noreferrer");
+    if (newWindow) newWindow.opener = null;
+  };
+  const handleVote = (vote) => (event) => {
+    fetch("/playlist/", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: props.name,
+        trackID: props.trackID,
+        vote: vote,
+      }),
+    });
+  };
   return (
     <Card className={classes.trackCard}>
-      <Grid
-        container
-        justify="space-between"
-        alignItems="center"
-      >
+      <Grid container justify="space-between" alignItems="center">
         <CardMedia
           component="img"
           src={props.image.url}
@@ -61,13 +97,34 @@ export default function Layout(props) {
             </Typography>
           </Grid>
         </CardContent>
+
         <CardContent className={classes.cardContent}>
-          <IconButton variant="outlined">
-            <ArrowUpward />
-          </IconButton>
-          <IconButton variant="outlined">
-            <ArrowDownward />
-          </IconButton>
+          {props.previewUrl ? (
+            <Grid>
+              <IconButton variant="outlined" onClick={toggle}>
+                {playing ? (
+                  <PauseCircleOutlineRounded />
+                ) : (
+                  <PlayCircleOutlineRounded />
+                )}
+              </IconButton>
+              <IconButton
+                variant="outlined"
+                onClick={() => openInNewTab(props.songLink)}
+              >
+                <LinkRounded />
+              </IconButton>
+            </Grid>
+          ) : (
+            <Grid>
+              <IconButton variant="outlined" onClick={handleVote(true)}>
+                <ArrowUpward />
+              </IconButton>
+              <IconButton variant="outlined" onClick={handleVote(false)}>
+                <ArrowDownward />
+              </IconButton>
+            </Grid>
+          )}
         </CardContent>
       </Grid>
     </Card>

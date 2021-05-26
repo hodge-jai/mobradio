@@ -83,6 +83,7 @@ export default function Layout() {
             {searchResults.map((item) => (
               <ListItem key={`item-${item.id}`} className={classes.trackItem}>
                 <TrackCard
+                  trackID={item.id}
                   name={item.name}
                   image={item.album.images[0]}
                   artists={item.album.artists[0].name}

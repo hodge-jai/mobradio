@@ -46,6 +46,7 @@ export default function Layout() {
       console.log(playlist);
     };
   }, []);
+
   return (
     <Grid item xs={6} className={classes.trackList}>
       <Paper className={classes.paper} square>
@@ -56,6 +57,9 @@ export default function Layout() {
               className={classes.trackItem}
             >
               <TrackCard
+                previewUrl={item.track.preview_url}
+                songLink={item.track.external_urls.spotify}
+                trackID={item.track.id}
                 name={item.track.name}
                 artists={item.track.artists[0].name}
                 image={item.track.album.images[0]}
