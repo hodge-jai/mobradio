@@ -27,6 +27,8 @@ router.post("/", (req, res) => {
       res.status(400).json("Error: " + err);
     }
     if (!docs) {
+
+      console.log("This should be called - HEROKU")
       const _id = new mongoose.Types.ObjectId();
 
       const { name, trackID } = req.body;
