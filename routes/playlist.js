@@ -51,7 +51,7 @@ router.post("/", (req, res) => {
       const trackID = req.body.trackID;
       console.log(req.body);
       const voteType = req.body.vote ? "positiveVotes" : "negativeVotes";
-      console.log("My Docs: " + docs)
+      console.log("My Docs: " + docs);
       Track.findOneAndUpdate(
         { trackID: trackID },
         { $inc: { [voteType]: 1 } },
@@ -60,10 +60,14 @@ router.post("/", (req, res) => {
           if (err) {
             console.log(err);
           } else {
-            // if (response.positiveVotes >= 5 && !(response.inPlaylist)) {
-            //   console.log("Adding to playlist");
-            //   await SpotifyApi.addToPlaylist(trackID);
-            // }
+            if (response.positiveVotes >= 5 && !response.inPlaylist) {
+              await SpotifyApi.addToPlaylist(trackID);
+              await Track.findOneAndUpdate(
+                { trackID: trackID },
+                { inPlaylist: true },
+                { new: true }
+              );
+            }
             console.log(response);
           }
         }

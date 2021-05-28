@@ -91,7 +91,7 @@ class SpotifyApi {
     var query =
       "https://api.spotify.com/v1/search?q=" +
       querystring.escape(search) +
-      "&type=track";
+      "&type=track&limit=10";
     var authOptions = {
       headers: {
         Authorization: "Bearer " + this.accessToken,

@@ -6,8 +6,7 @@ const trackSchema = new Schema({
   trackID: { type: String, required: true },
   positiveVotes: { type: Number, default: 0 },
   negativeVotes: { type: Number, default: 0 },
-  inPlaylist: {type: Boolean, default: false },
+  inPlaylist: { type: Boolean, default: false },
 });
-
 const Track = mongoose.model("Track", trackSchema);
 module.exports = Track;
