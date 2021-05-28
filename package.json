@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "build": "cd mrclient && npm run build",
+    "install-client": "cd mrclient && npm install",
+    "heroku-postbuild": "npm run install-client && npm run build",
     "start": "nodemon ./bin/www"
   },
   "dependencies": {
