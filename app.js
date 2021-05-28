@@ -16,11 +16,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-if (process.env.NODE_ENV === 'production'){
-  app.use(express.static('mrclient/build'));
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("mrclient/build"));
 }
-
-
 
 app.use("/playlist", playlistRouter);
 // catch 404 and forward to error handler
@@ -39,11 +37,19 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 
-
 const uri = process.env.ATLAS_URI;
-mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true }, function(err){
-  if (err) console.log(err);
-});
+mongoose.connect(
+  uri,
+  {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    server: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } },
+    replset: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } },
+  },
+  function (err) {
+    if (err) console.log(err);
+  }
+);
 
 const connection = mongoose.connection;
 connection.once("open", () => {
