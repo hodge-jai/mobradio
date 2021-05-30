@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     height: "100%",
     background: "#FFFFFF",
+    overflow: 'auto',
   },
   contentBox: {
     width: "80%",
@@ -36,6 +37,8 @@ const useStyles = makeStyles((theme) => ({
 export default function Layout() {
   const classes = useStyles();
   const [playlist, setPlaylist] = useState([]);
+  const [page, pageRefresh] = useState(false)
+
 
   useEffect(() => {
     fetch("/playlist/")
