@@ -3,6 +3,7 @@ import {
   Grid,
   Paper,
   IconButton,
+  Button,
   Divider,
   Typography,
   List,
@@ -12,8 +13,14 @@ import {
   CardContent,
   CardMedia,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
 import {
+  makeStyles,
+  createMuiTheme,
+  ThemeProvider,
+} from "@material-ui/core/styles";
+import {
+  Add,
+  Done,
   ArrowUpward,
   ArrowDownward,
   PlayCircleOutlineRounded,
@@ -44,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 const useAudio = (url) => {
   const [audio] = useState(new Audio(url));
   const [playing, setPlaying] = useState(false);
@@ -67,19 +75,24 @@ const useAudio = (url) => {
 export default function Layout(props) {
   const classes = useStyles();
   const [playing, toggle] = useAudio(props.previewUrl);
+  const [vote, setVote] = useState(false);
   const openInNewTab = (url) => {
     const newWindow = window.open(url, "_blank", "noopener,noreferrer");
     if (newWindow) newWindow.opener = null;
   };
-  const handleVote = (vote) => (event) => {
+  const handleVote = (event) => {
     fetch("/playlist/", {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name: props.name,
         trackID: props.trackID,
-        vote: vote,
+        vote: true,
       }),
+    }).then((response) => {
+      if (response.status === 201 || response.status === 200 ) {
+        setVote(true);
+      }
     });
   };
   return (
@@ -116,13 +129,22 @@ export default function Layout(props) {
               </IconButton>
             </Grid>
           ) : (
-            <Grid>
-              <IconButton variant="outlined" onClick={handleVote(true)}>
-                <ArrowUpward />
-              </IconButton>
-              <IconButton variant="outlined" onClick={handleVote(false)}>
-                <ArrowDownward />
-              </IconButton>
+            <Grid style={{ padding: "1em" }}>
+              {vote ? (
+                  <Button
+                    variant="contained"
+                    disabled
+                    color="primary"
+                  ><Done style={{color:"white"}} /></Button>
+              ) : (
+                <Button
+                  variant="outlined"
+                  onClick={handleVote}
+                  color="primary"
+                >
+                  Vote!
+                </Button>
+              )}
             </Grid>
           )}
         </CardContent>
