@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
   contentBox: {
     width: "80%",
     height: "80%",
+    overflow: "auto",
   },
   divider: {
     background: "#3a404a",
