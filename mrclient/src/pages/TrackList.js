@@ -51,7 +51,7 @@ export default function Layout() {
   }, []);
 
   return (
-    <Grid item xs={6} className={classes.trackList}>
+    <Grid item xs={12} md={6} lg={6}  className={classes.trackList}>
       <Paper className={classes.paper} square>
         <List>
           {playlist.map((item) => (

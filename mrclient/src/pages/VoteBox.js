@@ -62,7 +62,9 @@ export default function Layout() {
     <Grid
       container
       item
-      xs={6}
+      xs={12}
+      md={6}
+      lg={6}
       alignItems="flex-start"
       className={classes.voteBox}
       spacing={1}
